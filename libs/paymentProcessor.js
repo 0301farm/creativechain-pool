@@ -469,7 +469,7 @@ function SetupForPool(logger, poolOptions, setupFinished) {
                         }
 
                         for (var key in addressAmounts) {
-                            addressAmounts[key] = parseFloat(addressAmounts[key]).toFixed(1 / magnitude)
+                            addressAmounts[key] = parseFloat(addressAmounts[key]).toFixed(8)
                         }
 
                         daemon.cmd('sendmany', [addressAccount || '', addressAmounts], function (result) {
