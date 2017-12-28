@@ -389,7 +389,7 @@ function SetupForPool(logger, poolOptions, setupFinished) {
                 var sumAddressAmounts = {};
 
                 test.forEach(function (w) {
-                    var addressOnly = w.substring(0, w.indexOf('.'));
+                    var addressOnly = w.substring(0, w.indexOf('.') > -1 ? w.indexOf('.') : undefined);
 
                     daemon.cmd('validateaddress', [addressOnly], function (results) {
                         if (results[0].response.address) { // address is valid, ready for payout
@@ -424,7 +424,7 @@ function SetupForPool(logger, poolOptions, setupFinished) {
                     var totalSent = 0;
 
                     test.forEach(function (w) {
-                        var addressOnly = w.substring(0, w.indexOf('.'));
+                        var addressOnly = w.substring(0, w.indexOf('.') > -1 ? w.indexOf('.') : undefined);
 
                         daemon.cmd('validateaddress', [addressOnly], function (results) {
                             if (!results[0].response.address) {
@@ -466,6 +466,10 @@ function SetupForPool(logger, poolOptions, setupFinished) {
                         if (Object.keys(addressAmounts).length === 0) {
                             callback(null, workers, rounds);
                             return;
+                        }
+
+                        for (var key in addressAmounts) {
+                            addressAmounts[key] = parseFloat(addressAmounts[key]).toFixed(1 / magnitude)
                         }
 
                         daemon.cmd('sendmany', [addressAccount || '', addressAmounts], function (result) {
